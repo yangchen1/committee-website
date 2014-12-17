@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Roger Chapman</title>
+ <link href="http://rogchap.com/atom.xml" rel="self"/>
+ <link href="http://rogchap.com/"/>
+ <updated>2014-12-17T10:21:43-05:00</updated>
+ <id>http://rogchap.com/</id>
+ <author>
+   <name>Roger Chapman</name>
+   <email>rogchap@gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>Custom UIView Animations with Vector Graphics</title>
+   <link href="http://rogchap.com/2013/08/23/custom-uiview-animations-with-vector-graphics/"/>
+   <updated>2013-08-23T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2013/08/23/custom-uiview-animations-with-vector-graphics</id>
+   <content type="html">&lt;p&gt;There are may great things that you gain by using vector graphics in your iOS apps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Increased performance&lt;/li&gt;
+  &lt;li&gt;Reduced app file size&lt;/li&gt;
+  &lt;li&gt;Works on retina and non-retina devices&lt;/li&gt;
+  &lt;li&gt;Dynamic shapes and colors&lt;/li&gt;
+  &lt;li&gt;Animations&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Because vector graphics are all drawn in-code with &lt;code&gt;CoreGraphics&lt;/code&gt; we can change values to animate the &lt;code&gt;UIView&lt;/code&gt;s.&lt;/p&gt;
+
+&lt;p&gt;If you’ve never used vector graphics in your iOS apps before you should take a look at &lt;a href=&quot;http://www.paintcodeapp.com/&quot;&gt;PaintCode&lt;/a&gt;; PaintCode is an awesome vector drawing app that generates Objective-C code that you can copy and paste into your application. I don’t build an iOS app without it now.&lt;/p&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;What we are going to create is and animation that is similar to the following; please note that this GIF only has 5 frames, our animation will be smooth from start to finish:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://rogchap.com/images/custom_ui_animation.gif&quot; alt=&quot;Custom UIView Animation&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;custom-control-calayer&quot;&gt;Custom Control CALayer&lt;/h2&gt;
+
+&lt;p&gt;The key to creating a custom animation lies within the view’s layer class. The &lt;code&gt;CALayer&lt;/code&gt;’s &lt;code&gt;drawInContext:&lt;/code&gt; method will draw the curved arrow and by changing the &lt;code&gt;percentage&lt;/code&gt; property will determine the x position of the arrow head’s frame:&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/6337586.js?file=RCArrowControlLayer.h&quot;&gt; &lt;/script&gt;
+
+&lt;script src=&quot;https://gist.github.com/6337586.js?file=RCArrowControlLayer.m&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;The important parts to creating this animation layer is making sure that the &lt;code&gt;percentage&lt;/code&gt; property is &lt;code&gt;@dynamic&lt;/code&gt; and that we update the display when the &lt;code&gt;percentage&lt;/code&gt; property changed.&lt;/p&gt;
+
+&lt;p&gt;We also set the action for the &lt;code&gt;percentage&lt;/code&gt; to return a nice &lt;code&gt;CABasicAnimation&lt;/code&gt;. This means that when we change &lt;code&gt;percentage&lt;/code&gt; from 1 to 0 the actual property transitions from 1 to 0.9 to 0.8 … 0.2 to 0.1 to 0.0 with the given easing function.&lt;/p&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+
+&lt;p&gt;Once we have created a the layer we can easily create the &lt;code&gt;UIView&lt;/code&gt; that implements this layer and add this to our &lt;code&gt;UIViewController&lt;/code&gt; either via code or Interface Builder.&lt;/p&gt;
+
+&lt;p&gt;I’ve created a sample project on GitHub that contains all the source and shows the implementation here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/rogchap/SampleProjects/tree/master/CustomUIViewAnimation&quot;&gt;https://github.com/rogchap/…/CustomUIViewAnimation&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Simple iOS Dropdown Control using UITextField</title>
+   <link href="http://rogchap.com/2013/08/13/simple-ios-dropdown-control-using-uitextfield/"/>
+   <updated>2013-08-13T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2013/08/13/simple-ios-dropdown-control-using-uitextfield</id>
+   <content type="html">&lt;p&gt;The Native iOS controls do not specifically have a native control for a dropdown. What we want is a control that behaves like a HTML dropdown that uses a &lt;code&gt;UIPickerControl&lt;/code&gt; in Safari.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;UITextField&lt;/code&gt; is the “go to” for text input, but we can utilise the &lt;code&gt;inputView&lt;/code&gt; property to display the &lt;code&gt;UIPickerControl&lt;/code&gt; and then the &lt;code&gt;rightView&lt;/code&gt; property to make the text field look like a dropdown.&lt;/p&gt;
+
+&lt;p&gt;This is what we are looking to achieve:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://rogchap.com/images/dropdown.jpg&quot; alt=&quot;Native iOS dropdown&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-arrow-view&quot;&gt;The Arrow View&lt;/h2&gt;
+
+&lt;p&gt;To create the dropdown arrow we create a &lt;code&gt;UIView&lt;/code&gt; for the right hand side of the &lt;code&gt;UITextField&lt;/code&gt;. You could use an &lt;code&gt;UIImageView&lt;/code&gt; but I’ve chosen to subclass &lt;code&gt;UIView&lt;/code&gt; and draw my own arrow in &lt;code&gt;drawInRect:&lt;/code&gt;:&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/6289895.js?file=RCDropdownArrowView.h&quot;&gt; &lt;/script&gt;
+
+&lt;script src=&quot;https://gist.github.com/6289895.js?file=RCDropdownArrowView.m&quot;&gt; &lt;/script&gt;
+
+&lt;h2 id=&quot;subclass-uitextfield&quot;&gt;Subclass UITextField&lt;/h2&gt;
+
+&lt;p&gt;By subclass-ing &lt;code&gt;UITextField&lt;/code&gt; we can easily add the &lt;code&gt;UIPickerControl&lt;/code&gt; as the  &lt;code&gt;inputView&lt;/code&gt; as well as the arrow view as the &lt;code&gt;rightView&lt;/code&gt;.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/6289895.js?file=RCDropdown.h&quot;&gt; &lt;/script&gt;
+
+&lt;script src=&quot;https://gist.github.com/6289895.js?file=RCDropdown.m&quot;&gt; &lt;/script&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+
+&lt;p&gt;Within interface builder I can easily add &lt;code&gt;UITextField&lt;/code&gt; controls to my view and change it’s class to &lt;code&gt;RCDropdown&lt;/code&gt;. All that is left to do is setup the data source for the picker control:&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/6289895.js?file=RCRegisterViewController.m&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;I use the &lt;code&gt;tag&lt;/code&gt; property in case I require multiple dropdowns.&lt;/p&gt;
+
+&lt;h2 id=&quot;additions&quot;&gt;Additions&lt;/h2&gt;
+
+&lt;p&gt;Things that are not included that would be nice is to have the arrow respond to touch events and the picker to use a “tick” image for selection as per Safari’s dropdown picker.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Image Resize Middleware for Express.js</title>
+   <link href="http://rogchap.com/2013/02/07/image-resize-middleware-for-expressjs/"/>
+   <updated>2013-02-07T00:00:00-05:00</updated>
+   <id>http://rogchap.com/2013/02/07/image-resize-middleware-for-expressjs</id>
+   <content type="html">&lt;p&gt;I love node.js and I love using express.js. One of the cool things with express is being able to add your own middleware. The following code snippit is a simple middleware that handles resizing images in my public folder.&lt;/p&gt;
+
+&lt;p&gt;The benifit of using this middleware is that I do not need a seperate controller to dynamically resize imagery. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- original image: --&amp;gt;
+&amp;lt;img src=&quot;/images/logo.png&quot; /&amp;gt;
+
+&amp;lt;!-- I don&#39;t want this: --&amp;gt;
+&amp;lt;img src=&quot;/imagereziser?image=/images/logo.png&amp;amp;w=100$h=100&quot; /&amp;gt;
+
+&amp;lt;!-- I&#39;d rather have this: --&amp;gt;
+&amp;lt;img src=&quot;/images/logo.png?size=100x100&quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is a simple code snippet for the basic middleware; it can easily be extending to check for image types (you don’t want to resise css or javascript files!) and it could take a optional parameter to handle &lt;code&gt;crop&lt;/code&gt; instead of just resize.&lt;/p&gt;
+
+&lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
+
+&lt;p&gt;This middleware requires imagemagick and the mkdirp node module:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ brew install imagemagick
+$ npm install mkdirp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;middleware&quot;&gt;Middleware&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;// image-resize.js
+var path = require(&#39;path&#39;),
+exec = require(&#39;child_process&#39;).exec,
+mkdirp = require(&#39;mkdirp&#39;);
+
+module.exports = ir = {};
+
+// express.js middleware
+ir.static = function(rootPath) {
+
+  var root = path.normalize(rootPath),
+    cache_path = path.join(root, &#39;.cache&#39;);
+
+  return function (req, res, next){
+
+    var file = req.url.replace(/\?.*/,&#39;&#39;),
+      size = req.query.size,
+      orig = path.normalize(root + file),
+      dst = path.join(cache_path, type, size, file);
+
+    function send_if_exists(file, callback) {
+      fs.exists(file, function(exists){
+
+        if (!exists) return callback();
+
+        return fs.stat(file, function(err, stats){
+          if (err){
+            console.error(err);
+          }
+          else if (stats.isFile()){
+            return res.sendfile(file);
+          }
+          return callback();
+        });
+      });
+    }
+
+    if (!size){
+      return send_if_exists(orig, next);
+    }
+
+    send_if_exists(dst, function() {
+
+      mkdirp(path.dirname(dst));
+
+      exec(&#39;convert &#39; + orig + &#39; -resize &#39;+ size +&#39; &#39; + dst , function(err) {
+        if(err) {
+          console.error(err);
+          res.send(err);
+        } else {
+          res.sendfile(dst);
+        }
+      });
+
+    });
+
+  };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+
+&lt;p&gt;In your &lt;code&gt;app.js&lt;/code&gt; replace the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//app.use(express.static(path.join(__dirname, &#39;public&#39;)));
+app.use(require(&#39;./image-resize&#39;).static(path.join(__dirname, &#39;public&#39;)));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;size&lt;/code&gt; parameter triggers the image resize otherwise it will just fetch the original image. The resized images are also cached for later use. &lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Apologies for my feed being down</title>
+   <link href="http://rogchap.com/2011/09/07/apologies-for-my-feed-being-down/"/>
+   <updated>2011-09-07T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/09/07/apologies-for-my-feed-being-down</id>
+   <content type="html">&lt;p&gt;Recently I made a post with an “&amp;amp;” symbol in the post’s title. The title did not get properly encoded and caused the xml atom feed to fail. &lt;/p&gt;
+
+&lt;p&gt;Apologies to all my subscribers, and I hope you can catch up on older posts (some cool Node stuff!). &lt;/p&gt;
+
+&lt;p&gt;Feed is now up and running again!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Top 40 Website Programming Languages</title>
+   <link href="http://rogchap.com/2011/09/06/top-40-website-programming-languages/"/>
+   <updated>2011-09-06T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/09/06/top-40-website-programming-languages</id>
+   <content type="html">&lt;p&gt;I was having a look on Google’s &lt;a href=&quot;http://www.google.com/adplanner/static/top1000/&quot;&gt;top 1000 most-visited websites&lt;/a&gt; and I thought it would be intresting to see if I could find out what programming languages these sites use.&lt;/p&gt;
+
+&lt;p&gt;Obviously it would take ages to do all 1000, so I researched the top 40.&lt;/p&gt;
+
+&lt;h2 id=&quot;disclaimer&quot;&gt;Disclaimer&lt;/h2&gt;
+
+&lt;p&gt;My results are in no way definitive and may even be wrong, but my resuts are comprised of:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;HTTP Header information&lt;/li&gt;
+  &lt;li&gt;Request for file types (.php for example)&lt;/li&gt;
+  &lt;li&gt;Searches on forums, presentations and Google&lt;/li&gt;
+  &lt;li&gt;Educated gueses ;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Once again, my results may be wrong! Also, I’m not thinking about other backend technology that may be used: like C/C++ for search engines etc, it is purly the programming languages that are serving HTML.&lt;/p&gt;
+
+&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;| Website        | Visits       | Programming Language
+-------------------------------------------------------------
+ | facebook.com   | 870,000,000  |  PHP
+ | youtube.com    | 790,000,000  |  Python
+ | yahoo.com      | 590,000,000  |  PHP*
+ | live.com       | 540,000,000  |  ASP.NET
+ | wikipedia.org  | 460,000,000  |  PHP
+ | msn.com        | 450,000,000  |  ASP.NET
+ | blogspot.com   | 370,000,000  |  Python*
+ | baidu.com      | 310,000,000  |  PHP
+ | microsoft.com  | 280,000,000  |  ASP.NET
+ | qq.com         | 250,000,000  |  PHP
+ | bing.com       | 230,000,000  |  ASP.NET
+ | ask.com        | 190,000,000  |  SSI
+ | taobao.com     | 170,000,000  |  PHP
+ | twitter.com    | 160,000,000  |  Ruby on Rails
+ | adobe.com      | 160,000,000  |  ColdFusion
+ | youku.com      | 160,000,000  |  PHP
+ | soso.com       | 140,000,000  |  CGI*
+ | wordpress.com  | 140,000,000  |  PHP
+ | sohu.com       | 130,000,000  |  PHP
+ | 163.com        | 130,000,000  |  JSP
+ | windows.com    | 120,000,000  |  ASP.NET
+ | hao123.com     | 120,000,000  |  PHP
+ | amazon.com     | 120,000,000  |  CGI
+ | tudou.com      | 120,000,000  |  PHP
+ | apple.com      | 97,000,000   |  PHP
+ | ebay.com       | 97,000,000   |  CGI
+ | linkedin.com   | 89,000,000   |  Scala/Java
+ | yahoo.co.jp    | 82,000,000   |  PHP*
+ | sogou.com      | 81,000,000   |  PHP
+ | go.com         | 74,000,000   |  CGI
+ | 4399.com       | 74,000,000   |  PHP
+ | paypal.com     | 73,000,000   |  CGI
+ | mozilla.com    | 73,000,000   |  PHP/Python
+ | aol.com        | 73,000,000   |  JSP
+ | about.com      | 73,000,000   |  unknown
+ | xunlei.com     | 68,000,000   |  PHP
+ | 56.com         | 67,000,000   |  PHP
+ | flickr.com     | 67,000,000   |  PHP
+ | craigslist.org | 66,000,000   |  Perl
+ | tmall.com      | 66,000,000   |  PHP&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;*educated guesses&lt;/p&gt;
+
+&lt;h2 id=&quot;observations&quot;&gt;Observations&lt;/h2&gt;
+
+&lt;p&gt;Based on the above results we see that PHP is the dominant language claming 50% of the top 40 websites. Also, ASP.NET seems to be only used in Microsoft properties. &lt;/p&gt;
+
+&lt;p&gt;Other interesting observations that are not in the results is that two of the PHP websites are using IIS 6.0 and the rest mainly using Apache with a few using Nginx.&lt;/p&gt;
+
+&lt;h2 id=&quot;report-errors&quot;&gt;Report errors&lt;/h2&gt;
+
+&lt;p&gt;If you see an error in my results I would love to hear from you: please leave a comment stating the correction. Thanks.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>HTML 5, Mobile Web and Websokets; What More do You Want?</title>
+   <link href="http://rogchap.com/2011/08/26/html5-mobile-web-websockets-what-more-do-you-want/"/>
+   <updated>2011-08-26T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/08/26/html5-mobile-web-websockets-what-more-do-you-want</id>
+   <content type="html">&lt;p&gt;I’ve done a cool (I think it is anyway) experiment: I wanted to use my mobile web browser to control my desktop browser. The app was to be built using HTML5 technologies and no Flash or native mobile application.&lt;/p&gt;
+
+&lt;h2 id=&quot;technologies&quot;&gt;Technologies&lt;/h2&gt;
+
+&lt;p&gt;For the server side code I used &lt;a href=&quot;http://www.http://nodejs.org/&quot;&gt;Node.js&lt;/a&gt;, HTML5’s canvas and JavaScript on the client, and transport over websockets via &lt;a href=&quot;http://socket.io/&quot;&gt;socket.io&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Moble detection was nice and easy in Node:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+
+	&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ua&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;header&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;user-agent&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/mobile/i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ua&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;mobile.html&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;desktop.html&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;so-what-does-the-app-do&quot;&gt;So, what does the app do?&lt;/h2&gt;
+
+&lt;p&gt;Basically, it allows you to use your mobile’s touch screen to draw on the canvas that resides on your desktop screen:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/rogchap/SampleProjects/raw/master/NodeDrawing/Screenshot.png&quot; alt=&quot;Node Drawing&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;demo&quot;&gt;Demo&lt;/h2&gt;
+
+&lt;p&gt;A demo is availible at:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://drawing.labs.rogchap.com&quot;&gt;http://drawing.labs.rogchap.com&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Ps. It’s been tested on Chrome, Firefox and Safari, with an iPhone and an Android Phone. Don’t bother with IE or a Windows 7 Phone or Blackberry: It just won’t work! ;)&lt;/p&gt;
+
+&lt;h2 id=&quot;source&quot;&gt;Source&lt;/h2&gt;
+
+&lt;p&gt;Once again (as always) source is available on GitHub:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/rogchap/SampleProjects/tree/master/NodeDrawing&quot;&gt;https://github.com/rogchap/SampleProjects/tree/master/NodeDrawing&lt;/a&gt;&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Chat App Online</title>
+   <link href="http://rogchap.com/2011/08/23/chat-app-online/"/>
+   <updated>2011-08-23T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/08/23/chat-app-online</id>
+   <content type="html">&lt;p&gt;I previously bloged about my &lt;a href=&quot;http://rogchap.com/2011/08/10/my-nodejs-chat-app/&quot;&gt;NodeChat app&lt;/a&gt; that I created, with the code up on &lt;a href=&quot;https://github.com/rogchap/SampleProjects/tree/master/NodeChat&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I decided to publish the app so that you lovely people could have a play with it without having to download the source and run it locally. It also served as a good walktrough in putting together a nodejs production server. I’ll write up a seperate post on this.&lt;/p&gt;
+
+&lt;h2 id=&quot;nodechat-url&quot;&gt;NodeChat URL&lt;/h2&gt;
+
+&lt;p&gt;You can find my NodeChat at:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://chat.labs.rogchap.com&quot;&gt;http://chat.labs.rogchap.com&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;nodechat-screenshot&quot;&gt;NodeChat Screenshot&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/rogchap/SampleProjects/raw/master/NodeChat/Screenshot.png&quot; alt=&quot;NodeSchat Screenshot&quot; width=&quot;580px&quot; /&gt; &lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>My Node.js Chat App</title>
+   <link href="http://rogchap.com/2011/08/10/my-nodejs-chat-app/"/>
+   <updated>2011-08-10T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/08/10/my-nodejs-chat-app</id>
+   <content type="html">&lt;p&gt;I’m a big fan of &lt;a href=&quot;http://nodejs.org/&quot;&gt;node.js&lt;/a&gt;, and when learning node, you can’t do it without building a chat room app! Everybody’s done one so I thought I would share my node chat app:&lt;/p&gt;
+
+&lt;h2 id=&quot;the-building-blocks&quot;&gt;The building blocks&lt;/h2&gt;
+
+&lt;p&gt;My chat app uses three frameworks:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://nodejs.org/&quot;&gt;node.js&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://expressjs.com/&quot;&gt;express&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://socket.io/&quot;&gt;socket.io&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Socket.IO makes websockets supper simple, and is even &lt;a href=&quot;http://socket.io/#browser-support&quot;&gt;cross browser compatible&lt;/a&gt;. Socket.IO will use the best transport of your messages that is available in that browser, ie. websockets -&amp;gt; websockets over Flash -&amp;gt; ajax polling. So this should mean that my app should work in IE6 (although not tested!).&lt;/p&gt;
+
+&lt;p&gt;A very simple socket.io demo:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// server.js&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;io&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;socket.io&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+	&lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;emit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;welcome&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Welcome to NodeChat!&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// client.js&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;socket&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;http://localhost:3000&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;welcome&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+	&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You can’t get more simple than that!&lt;/p&gt;
+
+&lt;h2 id=&quot;source-code&quot;&gt;Source code&lt;/h2&gt;
+
+&lt;p&gt;As always the complete application is available on GitHub:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/rogchap/SampleProjects/tree/master/NodeChat&quot;&gt;https://github.com/rogchap/SampleProjects/tree/master/NodeChat&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;All the information is contained in the README file and the best thing to do is download the source and run it.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Beautiful Number Input for iPhone</title>
+   <link href="http://rogchap.com/2011/07/13/beautiful-number-input-for-iphone/"/>
+   <updated>2011-07-13T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/07/13/beautiful-number-input-for-iphone</id>
+   <content type="html">&lt;p&gt;Most text/number input is done with a &lt;code&gt;UIFextField&lt;/code&gt;, but the text in the field can not be styled very well (ie. no shadow). It also has a blinking cursor which sometimes you just don’t want.&lt;/p&gt;
+
+&lt;p&gt;I wanted to enter a number using the number pad, have a nice drop shadow on the text, no blinking cursor and as an added bonus would show the currency symbol at the start of the number:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/rogchap/SampleProjects/raw/master/NumberInput/Screenshot.png&quot; alt=&quot;Sreenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;hidden-uitextfield&quot;&gt;Hidden UITextField&lt;/h2&gt;
+
+&lt;p&gt;The trick here is to have a &lt;code&gt;UITextField&lt;/code&gt; with a &lt;code&gt;UILabel&lt;/code&gt; in front. The &lt;code&gt;UILabel&lt;/code&gt; needs to have a background color so to hide the text and cursor being entered into the text field.&lt;/p&gt;
+
+&lt;p&gt;Then all we need to do is hook up the &lt;code&gt;EditingChanged&lt;/code&gt; event on the text field to then update our styled label:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;IBAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;textChanged:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_numberTextField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+	&lt;span class=&quot;c1&quot;&gt;// make sure we don&amp;#39;t go beyond INT32_MAX&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;INT32_MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_currentNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+ 		&lt;span class=&quot;n&quot;&gt;_numberTextField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;stringWithFormat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;%d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;_currentNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_numberLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;stringWithFormat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;%@%d&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSLocale&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currentLocale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;objectForKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSLocaleCurrencySymbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_currentNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;source-on-github&quot;&gt;Source on GitHub&lt;/h2&gt;
+
+&lt;p&gt;Once again I’ve added a source project on GitHub so you can try it out for yourself:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/rogchap/SampleProjects/tree/master/NumberInput&quot;&gt;https://github.com/rogchap/SampleProjects/tree/master/NumberInput&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;not-just-numbers&quot;&gt;Not just Numbers&lt;/h2&gt;
+
+&lt;p&gt;This technique will work on regular text too, and not just number. If you use this technique in any of your projects let me know as I would love to take a look at you implementation. :)&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Simple User Helper for iOS</title>
+   <link href="http://rogchap.com/2011/07/12/simple-user-helper-for-ios/"/>
+   <updated>2011-07-12T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/07/12/simple-user-helper-for-ios</id>
+   <content type="html">&lt;p&gt;I’m sure there are many ways to store user information to remember if a user is logged in or not, using the key chain api for example. However, I like to keep things really really simple, so I created a simple helper class to deal with my user object and store the info using &lt;code&gt;NSUserDefaults&lt;/code&gt; and have a static constructor:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// UserHelper.h&lt;/span&gt;
+	
+&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserHelper&lt;/span&gt; : &lt;span class=&quot;bp&quot;&gt;NSObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;bp&quot;&gt;NSUserDefaults&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;retain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isValid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;clear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;+(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UserHelper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+	
+&lt;span class=&quot;c1&quot;&gt;// UserHelper.m&lt;/span&gt;
+	
+&lt;span class=&quot;cp&quot;&gt;#import &amp;quot;UserHelper.h&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserHelper&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@synthesize&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//////////////////////////////////////////////////////////////////////////////////&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark -&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark NSObject&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kcurrentUser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&amp;quot;currentUser&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;+(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UserHelper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserHelper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;helper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;helper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;helper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UserHelper&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;helper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSUserDefaults&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;standardUserDefaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;stringForKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kcurrentUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//////////////////////////////////////////////////////////////////////////////////&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark -&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark Private&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setCurrentUserId:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;forKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kcurrentUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;synchronize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSNotificationCenter&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;defaultCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;postNotificationName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;UserSignedIn&amp;quot;&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//////////////////////////////////////////////////////////////////////////////////&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark -&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark Public&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isValid&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;isKindOfClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;clear&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;currentUserId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;removeObjectForKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kcurrentUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_defaults&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;synchronize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSNotificationCenter&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;defaultCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;postNotificationName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;UserSignedOut&amp;quot;&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In this helper method I’m only storing the user Id, but you could always store a user object and serialize/deserialize to JSON to store as &lt;code&gt;NSString&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Hope this may help someone who is after simple authentication persistence. &lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Simple API Creation with Node.js</title>
+   <link href="http://rogchap.com/2011/06/25/simple-api-creation-with-nodejs/"/>
+   <updated>2011-06-25T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/25/simple-api-creation-with-nodejs</id>
+   <content type="html">&lt;p&gt;This will be a tutorial for setting up a simple JSON API using &lt;a href=&quot;http://modejs.org&quot;&gt;Node.js&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Node.js is discribed as “evented I/O for V8 JavaScript” so is perfect for creating simple, lightweight APIs or websites.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1-install-nodejs&quot;&gt;Step 1: Install Node.js&lt;/h2&gt;
+
+&lt;p&gt;You can download Node.js from the GitHub repository and follow the &lt;a href=&quot;https://github.com/joyent/node/wiki/Installation&quot;&gt;installation guide&lt;/a&gt;, but I’m quite a fan of using package managers so I’m going to install that way, but either way works. Package manager details can be found here: &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager&quot;&gt;https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Check your Node.js installation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ node -v
+v0.4.8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have Node.js installed we will want to install npm (Node Package Manager) which will make installing Node.js modules a breeze.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl http://npmjs.org/install.sh | sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have Node.js installed and the Node Package Manager.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-2-setup-api-application&quot;&gt;Step 2: Setup API Application&lt;/h2&gt;
+
+&lt;p&gt;Create the directory for application:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ mkdir NodeApi
+$ cd NodeApi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Although we could create our API with Node.js alone I’m going to install &lt;a href=&quot;http://expressjs.com/&quot;&gt;express&lt;/a&gt; which makes web development simple; well also make sure we have all the dependancies like Jade, a templeting engine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ npm install -g express
+$ npm install -d
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then lets create a default express project:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ express
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will create the directories and files for a basic web application. Lets test our new web app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ node app.js
+Express server listening on port 3000 in development mode
+
+$ curl localhost:3000
+&amp;lt;!DOCTYPE .... etc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have a running web application! You can get more simple and lightweight that that….love it!&lt;/p&gt;
+
+&lt;h2 id=&quot;part-2-coming-soon&quot;&gt;Part 2: Coming soon&lt;/h2&gt;
+
+&lt;p&gt;I’m going to split this tutorial into a few parts. In the next part we will setup our application with a familier MVC style pattern.&lt;/p&gt;
+
+&lt;p&gt;As always I’ll be putting the source project on GitHub:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/rogchap/SampleProjects/tree/master/NodeApi&quot;&gt;https://github.com/rogchap/SampleProjects/tree/master/NodeApi&lt;/a&gt;&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Custom Navigation Bar Background and Custom Buttons</title>
+   <link href="http://rogchap.com/2011/06/21/custom-navigation-bar-background-and-custom-buttons/"/>
+   <updated>2011-06-21T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/21/custom-navigation-bar-background-and-custom-buttons</id>
+   <content type="html">&lt;p&gt;The default &lt;code&gt;UINavigationBar&lt;/code&gt; color is a bit boring and even changing the tint color only adds a little to the desired effect. More iPhone apps are displaying more “fancy” designs and the bulk standard navigation bar needs the same treatment.&lt;/p&gt;
+
+&lt;p&gt;This is the sort of navigation bar we are trying to achieve:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://rogchap.com/images/custom_nav.png&quot; alt=&quot;Custom Nav&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;navigation-bar-background&quot;&gt;Navigation Bar background&lt;/h2&gt;
+
+&lt;p&gt;To change the background of the navigation bar be need to override the the &lt;code&gt;drawRect:&lt;/code&gt; method, but I also only wanted to change the navigation background for the default navigation style. This way I could still have an app that can use the semi-transparent navigation bar when necessary. To achieve this we store the original &lt;code&gt;drawRect:&lt;/code&gt; method and only override when the &lt;code&gt;barStyle&lt;/code&gt; is equal to &lt;code&gt;UIBarStyleDefault&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I placed this code at the end of my app delegate:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#import &amp;lt;objc/runtime.h&amp;gt;
+
+static void (*_origDrawRect)(id, SEL, CGRect);
+
+static void OverrideDrawRect(UIToolbar *self, SEL _cmd, CGRect r) {
+  if ( self.barStyle == UIBarStyleDefault ) {
+    self.tintColor = UIColorFromRGB(0x008A35);
+    [[UIImage imageNamed:@&quot;top_navbar&quot;] drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+  } else {
+    // Call default method
+    _origDrawRect(self, _cmd, r);
+  }
+}
+
+@implementation UINavigationBar (UINavigationBarCategory)
+
++ (void)load {
+  Method origMethod = class_getInstanceMethod(self, @selector(drawRect:));
+  _origDrawRect = (void *)method_getImplementation(origMethod);
+
+  if(!class_addMethod(self, @selector(drawRect:), (IMP)OverrideDrawRect, method_getTypeEncoding(origMethod)))
+    method_setImplementation(origMethod, (IMP)OverrideDrawRect);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will now set the background of all &lt;code&gt;UINavigationBar&lt;/code&gt;s to &lt;code&gt;top_navbar.png&lt;/code&gt; for the default style. You can also use similar code to change &lt;code&gt;UITabBar&lt;/code&gt;s.&lt;/p&gt;
+
+&lt;h2 id=&quot;custom-navigation-bar-buttons&quot;&gt;Custom Navigation Bar Buttons&lt;/h2&gt;
+
+&lt;p&gt;At this point your navigation bar will have your new background image but the buttons will still have the default look based on the tint color you specified. This maybe what you want but if you want custom buttons I created the following category:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// UIBarButtonItem+Image.h
+
+@interface UIBarButtonItem (Image)
+
+-(id)initWithImage:(UIImage *)image title:(NSString*)title target:(id)target action:(SEL)action;
+
+@end
+
+//  UIBarButtonItem+Image.m
+
+@implementation UIBarButtonItem (Image)
+
+-(id)initWithImage:(UIImage *)image title:(NSString*)title target:(id)target action:(SEL)action {
+  UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+  button.frame= CGRectMake(0.0, 0.0, image.size.width, image.size.height);
+  button.titleLabel.font = [UIFont boldSystemFontOfSize:12];
+  button.titleLabel.shadowOffset = CGSizeMake(0, -1);
+  button.titleLabel.shadowColor = [UIColor colorWithWhite:0 alpha:0.5];
+
+  [button setTitle:title forState:UIControlStateNormal];
+  [button setBackgroundImage:image forState:UIControlStateNormal];
+  [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+
+  UIView *view =[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, image.size.width, image.size.height) ];
+  [view addSubview:button];
+
+  self = [[UIBarButtonItem alloc] initWithCustomView:view];
+
+  [view release];
+  [image release];
+
+  return self;
+}
+
+-(void)setEnabled:(BOOL)enabled {
+  if (self.customView) {
+    if ([[self.customView.subviews objectAtIndex:0] isKindOfClass:[UIButton class]]) {
+      ((UIButton*)[self.customView.subviews objectAtIndex:0]).enabled = enabled;
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;setEnabled&lt;/code&gt; method allows you to set a disabled state on the &lt;code&gt;UIBarButtonItem&lt;/code&gt; and that state be reflected in the custom button.&lt;/p&gt;
+
+&lt;p&gt;In order to use your custom button in the nav bar you must set the left/right bar button item:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#import &quot;UIBarButtonItem+Image.h&quot;
+
+self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@&quot;custom_button&quot;] title:@&quot;Cancel&quot; target:self action:@selector(cancel)];
+self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@&quot;custom_button_blue&quot;] title:@&quot;Continue&quot; target:self action:@selector(continue)];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Your left and right button should now look like you custom buttons. One down side to this is that you would have to manually set the back button each time with a &lt;code&gt;popViewController&lt;/code&gt; action if you wanted a custom back button, but that’s no real headache.&lt;/p&gt;
+
+&lt;h2 id=&quot;bonus-uicolorfromrgb&quot;&gt;Bonus: UIColorFromRGB&lt;/h2&gt;
+
+&lt;p&gt;You’ll have notice that I used a macro in the &lt;code&gt;OverrideDrawRect&lt;/code&gt; method to set the tint color of the navigation bar:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue &amp;amp; 0xFF0000) &amp;gt;&amp;gt; 16))/255.0 green:((float)((rgbValue &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8))/255.0 blue:((float)(rgbValue &amp;amp; 0xFF))/255.0 alpha:1.0]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This was a macro provided by &lt;a href=&quot;http://cocoamatic.blogspot.com/2010/07/uicolor-macro-with-hex-values.html&quot;&gt;Cocoa-Matic&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>MKMapView Moving the Google Logo</title>
+   <link href="http://rogchap.com/2011/06/17/mkmapview-moving-the-google-logo/"/>
+   <updated>2011-06-17T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/17/mkmapview-moving-the-google-logo</id>
+   <content type="html">&lt;p&gt;The terms &amp;amp; conditions of using the MapKit in iOS is that the Google logo has to be visible, but sometimes your UI hides the logo, for example you may have an iAd or toolbar. This is a very simple addition to MKMapView to access the Google logo, so that you can move it to another part of the screen.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Warning&lt;/strong&gt;: Do not hide the logo otherwise your app will get rejected by Apple. As long as the logo is fully visible you should be fine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@implementation MKMapView (Additions)
+
+- (UIImageView*) googleLogo {
+
+	UIImageView *imgView = nil;
+	for (UIView *subview in self.subviews) {
+		if ([subview isMemberOfClass:[UIImageView class]]) {
+			imgView = (UIImageView*)subview;
+			break;
+		}
+	}
+	return imgView;
+}
+
+@end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As an extra method to make things easy for my particular application I decided to add the use of &lt;code&gt;UITextAlignment&lt;/code&gt; to align the logo left, center or right (right in my case):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;- (void) alignGoogleLogo:(UITextAlignment) alignment {
+
+  UIImageView *logo = [self googleLogo];
+  CGRect frame = logo.frame;
+  float padding = 9;
+
+  if (alignment == UITextAlignmentLeft) {
+
+    frame.origin.x = padding;
+
+  } else if (alignment == UITextAlignmentCenter) {
+
+    frame.origin.x = (self.size.width / 2) - (frame.size.width / 2);
+
+  } else if (alignment == UITextAlignmentRight) {
+
+    frame.origin.x = self.size.width - frame.size.width - padding;
+  }
+
+  [logo setFrame:frame];
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Calculating Collection Index Within a Grid</title>
+   <link href="http://rogchap.com/2011/06/13/calculating-collection-index-within-a-grid/"/>
+   <updated>2011-06-13T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/13/calculating-collection-index-within-a-grid</id>
+   <content type="html">&lt;p&gt;In my latest iOS app that I’m building I have the need for a grid view. iOS out of the box does not have a grid control, however I did find the awesome &lt;a href=&quot;http://danieltull.co.uk/blog/2009/10/28/dtgridview/&quot;&gt;DTGridView&lt;/a&gt; by Daniel Tull. This grid view uses the same concepts as the well known &lt;code&gt;UITableView&lt;/code&gt; and recycles the grid cells to maintain memory over a large dataset.&lt;/p&gt;
+
+&lt;p&gt;With a grid view there will always come to a point where you will want to know the selected cell. In a table view this is really simple as the row index is equal to your collection index; however in a grid view this involves a little math. The math is not straight forward, but even us developers have brain block and can’t even work out the simplest of equations.&lt;/p&gt;
+
+&lt;p&gt;For example given the following grid we want to work out the selected index at row 3 column 2:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  |  0  1  2
+-------------
+0 |  0  1  2
+1 |  3  4  5
+2 |  6  7  8
+3 |  9  10 11
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ok so the answer from the grid above is 11 and the equation for this problem is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;n * r + c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;n = number of columns&lt;/li&gt;
+  &lt;li&gt;r = row index&lt;/li&gt;
+  &lt;li&gt;c = column index&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So in our problem:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;3 * 3 + 2 = 11
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Correct!&lt;/p&gt;
+
+&lt;p&gt;This should work for any grid with any number of rows and columns. Remember that both the collection and grid have a zero based index.&lt;/p&gt;
+
+&lt;p&gt;Special thanks to &lt;a href=&quot;http://usingsystembeginner.blogspot.com/&quot;&gt;James Lynch&lt;/a&gt; for helping with figuring this out last thing on a Friday afternoon!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>iOS Image Manipulation with UIGestureRecognizer: scale, move, rotate</title>
+   <link href="http://rogchap.com/2011/06/10/ios-image-manipulation-with-uigesturerecognizer-scale-move-rotate/"/>
+   <updated>2011-06-10T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/10/ios-image-manipulation-with-uigesturerecognizer-scale-move-rotate</id>
+   <content type="html">&lt;p&gt;I promised to share with you my code that I used on the &lt;a href=&quot;http://itunes.apple.com/us/app/twibbon/id441719849?mt=8&amp;amp;ls=1#&quot;&gt;Twibbon iPhone app&lt;/a&gt;, to manipulate images using touch gestures. This solution uses &lt;code&gt;UIGestureRecognizer&lt;/code&gt;s and therefore only work in iOS 3.2 and above. The full source to a sample applications is available at the end.&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-the-ui&quot;&gt;Setting up the UI&lt;/h2&gt;
+
+&lt;p&gt;On your main view you first want to set up an &lt;code&gt;UIView&lt;/code&gt; that will act as your canvas. This canvas will contain your &lt;code&gt;UIImageView&lt;/code&gt; for your photo. Setting the canvas view to &lt;em&gt;Clip Subviews&lt;/em&gt; will make sure that your photo view will be masked inside of the canvas.&lt;/p&gt;
+
+&lt;h2 id=&quot;create-your-uigesturerecognizers&quot;&gt;Create your UIGestureRecognizers&lt;/h2&gt;
+
+&lt;p&gt;Once we have set up the basic UI we then need to make sure our app responds to your touch gestures on the screen, like so:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+	&lt;span class=&quot;bp&quot;&gt;UIPinchGestureRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pinchRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPinchGestureRecognizer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;initWithTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pinchRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setDelegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;addGestureRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pinchRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+	&lt;span class=&quot;bp&quot;&gt;UIRotationGestureRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotationRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIRotationGestureRecognizer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;initWithTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;rotate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotationRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setDelegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;addGestureRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotationRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+	&lt;span class=&quot;bp&quot;&gt;UIPanGestureRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;panRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPanGestureRecognizer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;initWithTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;panRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setMinimumNumberOfTouches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;panRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setMaximumNumberOfTouches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;panRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setDelegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;addGestureRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;panRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+	&lt;span class=&quot;bp&quot;&gt;UITapGestureRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tapProfileImageRecognizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UITapGestureRecognizer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;initWithTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;tapped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tapProfileImageRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setNumberOfTapsRequired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tapProfileImageRecognizer&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setDelegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;addGestureRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tapProfileImageRecognizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You’ll notice that the pinch and rotate actions have been added to the whole view whereas the move has only been added to the &lt;code&gt;canvas&lt;/code&gt;; this is because I felt that it gives a better user experience especially as it gives the user more screen to use two fingers.&lt;/p&gt;
+
+&lt;h2 id=&quot;hook-up-the-manipulation-methods&quot;&gt;Hook up the manipulation methods&lt;/h2&gt;
+
+&lt;p&gt;Once we have the gestures set up we can now use some animation to manipulate the photo based on the users touch gestures:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;scale:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPinchGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIGestureRecognizerStateBegan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;_lastScale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_lastScale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPinchGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+    &lt;span class=&quot;bp&quot;&gt;CGAffineTransform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currentTransform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;bp&quot;&gt;CGAffineTransform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newTransform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGAffineTransformScale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;_lastScale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPinchGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;showOverlayWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;rotate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIRotationGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIGestureRecognizerStateEnded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;_lastRotation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_lastRotation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIRotationGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+    &lt;span class=&quot;bp&quot;&gt;CGAffineTransform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currentTransform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;bp&quot;&gt;CGAffineTransform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newTransform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGAffineTransformRotate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newTransform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;_lastRotation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIRotationGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;showOverlayWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;bp&quot;&gt;CGPoint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;translatedPoint&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPanGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;translationInView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIPanGestureRecognizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIGestureRecognizerStateBegan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;_firstX&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;center&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;_firstY&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;center&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;translatedPoint&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGPointMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_firstX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;translatedPoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_firstY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;translatedPoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;translatedPoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;showOverlayWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;tapped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hidden&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;added-bonus-code-snipet-selection-marque-overlay&quot;&gt;Added bonus code snipet: selection marque overlay&lt;/h1&gt;
+
+&lt;p&gt;You’ll notice in some of the code above making reference to a &lt;code&gt;_marque&lt;/code&gt;, This is the &lt;em&gt;marching ants&lt;/em&gt; you see when you have selected the photo and allows you to easily see the boundary line of the image. &lt;/p&gt;
+
+&lt;p&gt;First we set up a &lt;code&gt;CAShapeLayer&lt;/code&gt; object using QuartzCore:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CAShapeLayer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;retain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fillColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clearColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;CGColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strokeColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grayColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;CGColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lineWidth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lineJoin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kCALineJoinRound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lineDashPattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSArray&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;arrayWithObjects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;numberWithInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;numberWithInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGPointMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;photoImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;addSublayer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we show the marque when we move (rotate, resize) the photo and add the &lt;em&gt;marching ants&lt;/em&gt; animation.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;p&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;showOverlayWithFrame:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;actionForKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;linePhase&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;bp&quot;&gt;CABasicAnimation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CABasicAnimation&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;animationWithKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;lineDashPhase&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setFromValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;numberWithFloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setToValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;numberWithFloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;15.0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setDuration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setRepeatCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HUGE_VALF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;addAnimation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dashAnimation&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;forKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&amp;quot;linePhase&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGPointMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;CGMutablePathRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGPathCreateMutable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;CGPathAddRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;setPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;CGPathRelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;_marque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hidden&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;example-project-and-source-on-github&quot;&gt;Example project and source on GitHub&lt;/h1&gt;
+
+&lt;p&gt;The full source of the above code is available within my &lt;a href=&quot;https://github.com/rogchap/SampleProjects&quot;&gt;Sample Projects GitHub account&lt;/a&gt; under the &lt;strong&gt;ImageManipulation&lt;/strong&gt; folder. Running this app should produce a lovely frame of Steve Jobs:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/rogchap/SampleProjects/raw/master/ImageManipulation/Screenshot.png&quot; alt=&quot;Image Manipulation iPhone sample app&quot; /&gt;&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Twibbon on your iPhone</title>
+   <link href="http://rogchap.com/2011/06/09/twibbon-on-you-iphone/"/>
+   <updated>2011-06-09T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/09/twibbon-on-you-iphone</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://twibbon.com&quot;&gt;Twibbon&lt;/a&gt; is a Twitter and Facebook application that allows you to create and select a campaign and display a &lt;em&gt;twibbon&lt;/em&gt; on your avatar.&lt;/p&gt;
+
+&lt;p&gt;Twibbon was created by our ideas arm of the company: Storm Ideas. I had the privilege of building the iPhone version.&lt;/p&gt;
+
+&lt;p&gt;Twibbon was a fun app to build and includes some cool image manipulation and getting to grips with UIGestures. In a future post I will share some of the image code, but for now go download the new Twibbon app now available on the App Store: &lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://itunes.apple.com/us/app/twibbon/id441719849?mt=8&amp;amp;ls=1#&quot;&gt;Download Twibbon for iPhone now!&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>iOS5 and Automatic Reference Counting</title>
+   <link href="http://rogchap.com/2011/06/07/ios5-and-automatic-reference-counting/"/>
+   <updated>2011-06-07T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/07/ios5-and-automatic-reference-counting</id>
+   <content type="html">&lt;p&gt;Well today is another day and it would be impossible to to write a blog post without mentioning &lt;a href=&quot;http://events.apple.com.edgesuite.net/11piubpwiqubf06/event/&quot;&gt;Apple’s Keynote&lt;/a&gt; at WWDC 2011. There were some awesome announcements for OSX Lion, iOS5 and iCloud; all with some amazing features.&lt;/p&gt;
+
+&lt;p&gt;For iOS there are some cool new features and applications which you can get an overview &lt;a href=&quot;http://www.apple.com/ios/ios5/&quot;&gt;here&lt;/a&gt;, but there are some equally cool features for Developers:&lt;/p&gt;
+
+&lt;h2 id=&quot;automatic-reference-counting-arc&quot;&gt;Automatic Reference Counting (ARC)&lt;/h2&gt;
+
+&lt;p&gt;Apple’s definition:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Automatic Reference Counting (ARC) is a compiler-level feature that simplifies the process of managing the lifetimes of Objective-C objects. Instead of you having to remember when to retain or release an object, ARC evaluates the lifetime requirements of your objects and automatically inserts the appropriate method calls at compile time.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Coming from a C# background, memory management became a thing of the past, however when I entered the iOS and Objective-C world I had to learn (and learn fast) about retaining, releasing objects. Now thanks to Apple’s new LLVM Compiler (3.0) I won’t have to type a retain or release again. That make me a very happy developer. Now I can concentrate on building great apps without the fear of the app crashing because of a memory leak or and object being auto-released.&lt;/p&gt;
+
+&lt;p&gt;I’m looking forward to using this new feature as well as &lt;a href=&quot;http://developer.apple.com/technologies/ios5/&quot;&gt;storyboards and other great features&lt;/a&gt;, but because it’s just a beta I won’t be able to try it out in anger until a little bit closer to Fall, when iOS5 is set to be released. &lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Facebook Connect Helper for iOS</title>
+   <link href="http://rogchap.com/2011/06/06/facebook-connect-helper-for-ios/"/>
+   <updated>2011-06-06T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/06/facebook-connect-helper-for-ios</id>
+   <content type="html">&lt;p&gt;Many iPhone/iPad apps use Facebook Connect, and Facebook have made this really easy with their &lt;a href=&quot;https://github.com/facebook/facebook-ios-sdk&quot;&gt;Facebook iOS SDK&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;One thing that you will always most likely want to do is make sure that the user only has to log in once, and every time time they want to use your app that they are already authenticated with Facebook. This means two things: first you need to make sure you authenticate the user with the &lt;code&gt;offline_access&lt;/code&gt; flag and secondly, save the access tokens for the next time your app is used.&lt;/p&gt;
+
+&lt;p&gt;This led me to create a very simple helper class that I use in conjunction with the Facebook SDK to make my life a little easier:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// FacebookHelper.h
+
+#import &quot;FBConnect.h&quot;
+@interface FacebookHelper : NSObject {
+
+}
+
++(Facebook*)fb;
++(void) resume;
++(void) save;
++(void) revoke;
+
+@end
+
+//FacebookHelper.m
+
+static NSString* kFBAccessToken = @&quot;FBAccessToken&quot;;
+static NSString* kFBExpirationDate = @&quot;FBExpirationDate&quot;;
+
+@implementation FacebookHelper
+
++(Facebook*)fb {
+	static Facebook *fb = nil;
+
+	if (fb == nil) {
+		fb = [[Facebook alloc] initWithAppId:FB_APP_ID];
+	}
+
+	return fb;
+}
+
++(void) resume {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  Facebook *facebook = [FacebookHelper fb];
+  facebook.accessToken = [defaults stringForKey:kFBAccessToken];
+  facebook.expirationDate = (NSDate*)[defaults objectForKey:kFBExpirationDate];
+}
+
++(void) save {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  Facebook *facebook = [FacebookHelper fb];
+
+  [defaults setObject:facebook.accessToken forKey:kFBAccessToken];
+  [defaults setObject:facebook.expirationDate forKey:kFBExpirationDate];
+  [defaults synchronize];
+}
+
++(void) revoke {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults removeObjectForKey:kFBAccessToken];
+  [defaults removeObjectForKey:kFBExpirationDate];
+  [defaults synchronize];
+}
+
+@end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see I have a static object for the Facebook SDK, and three simple static method to help me deal with login and logout. Now in my &lt;code&gt;applicationDidFinishLaunching&lt;/code&gt; method on my &lt;code&gt;AppDelegate&lt;/code&gt; I simply call:
+	[FacebookHelper resume];
+And when &lt;code&gt;fbDidLogin&lt;/code&gt; and &lt;code&gt;fbDidLogin&lt;/code&gt; are called:
+	[FacebookHelper save];
+and
+	[FacebookHelper revoke];&lt;/p&gt;
+
+&lt;p&gt;Simple!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Mobile Development: The Beginning</title>
+   <link href="http://rogchap.com/2011/06/05/mobile-development-the-beginning/"/>
+   <updated>2011-06-05T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/05/mobile-development-the-beginning</id>
+   <content type="html">&lt;p&gt;Well, it’s a Sunday and here I find myself writing a blog post. Well I did just promise that I wold keep up with this one, so I’m keen not to flop on the first hurdle.&lt;/p&gt;
+
+&lt;p&gt;In the last 18 months (or so) there has been a massive boom in mobile application or &lt;em&gt;apps&lt;/em&gt; as they are know commonly known. My background is in web based applications, but there is a huge cross over to mobile applications and many high flying web apps also have sold mobile apps: facebook and twitter instantly come to mind.  &lt;/p&gt;
+
+&lt;p&gt;No surprise to us that are clients start asking if we can do mobile applications for them to complement or add to their current web presence. We always tried to push them back to the web (even mobile web) there was still a huge demand for mobile applications. We’ll I just couldn’t just ignore that huge demand; could I?&lt;/p&gt;
+
+&lt;h2 id=&quot;mobile-applications-require-web-applications&quot;&gt;Mobile Applications Require Web Applications&lt;/h2&gt;
+&lt;p&gt;OK, so not strictly true, but you do find that most mobile applications (even games) have some sort of &lt;em&gt;internet&lt;/em&gt; connection to provide news articles, scoreboards, videos, photographs or what somebody is having for breakfast on there latest status update. So even mobile applications go back to the web.&lt;/p&gt;
+
+&lt;p&gt;RESTful services are so important to the success of a mobile application. The web based service that is taking requests and returning data (JSON most likely) is like the controller and the mobile device/phone is the view (yes that was an MVC analogy). &lt;/p&gt;
+
+&lt;h2 id=&quot;the-beginning--the-web&quot;&gt;The Beginning = The Web&lt;/h2&gt;
+&lt;p&gt;So although mobile apps are very &lt;em&gt;cool&lt;/em&gt; and we all want a bit of that pie, we will never see web development disappear. Although I have loved working with iPhone’s and Android device’s, creating some awesome applications, I always have to remind myself that the beginning is still with web development. &lt;/p&gt;
+
+&lt;p&gt;I’ll hopefully be able to share more with you about my web development experiences, and the mobile world from iOS to Android. I promise that I’ll share more tutorials and screen-casts as soon as I get a chance to put something together. Basically I want to share as much as I can, and I hope it helps at least one person out there.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>The Start of yet Another Blog</title>
+   <link href="http://rogchap.com/2011/06/03/the-start-of-yet-another-blog/"/>
+   <updated>2011-06-03T00:00:00-04:00</updated>
+   <id>http://rogchap.com/2011/06/03/the-start-of-yet-another-blog</id>
+   <content type="html">&lt;p&gt;Over the course of my career I’ve had quite a few blogs, however I have struggled to maintain writing content for each one. I still write blog posts for &lt;a href=&quot;http://blog.stormid.com&quot;&gt;-Storm ID-&lt;/a&gt; (I’ve left Storm ID. and now work for M&amp;amp;C Saatchi in Australia) but any personal blogs have now all disappeared from various hosting platforms.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-setup&quot;&gt;The setup&lt;/h2&gt;
+&lt;p&gt;This blog is hosted on &lt;a href=&quot;http://pages.github.com&quot;&gt;GitHub pages&lt;/a&gt;. GitHub pages allows me to be in control of my blog and makes it super simple to publish a new blog post; it’s as simple as:
+	$ git push
+Also, by hosting my blog posts on GitHub (should) mean that I won’t loose any of my posts and they will be all version controlled via my git repository.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mojombo/jekyll/&quot;&gt;Jekyll&lt;/a&gt; is also at the heart of this blog. This is mainly because GitHub pages support it (it was written by one of the co-founders of GitHub after all) and it is a really lightweight way to publish HTML content. Jekyll’s power comes in the form of layouts, templates and plugins. I’m currently using &lt;a href=&quot;http://daringfireball.net/projects/markdown/&quot;&gt;Daring Fireball’s Markdown&lt;/a&gt; as my template engine for my blog post, but the great thing about Jekyll is that I can change to &lt;a href=&quot;http://textile.thresholdstate.com/&quot;&gt;textile&lt;/a&gt; (for example) for any one post and Jekyll will deal with the rest i.e. I can mix ‘n’ match.&lt;/p&gt;
+
+&lt;h2 id=&quot;about-me&quot;&gt;About Me&lt;/h2&gt;
+&lt;p&gt;I’m an Application Developer living in Sydney, Australia. I’ve been in the development world commercially for 10 years now, but have been an indie developer for much longer.&lt;/p&gt;
+
+&lt;p&gt;My core programming language has been C# and the .NET framework, however, the last two years has seen me develop my skills in Objective-C (iOS development), Java (Android development) and even PHP; my current development enviroment of choice is Node.js.  &lt;/p&gt;
+
+&lt;p&gt;I love building &lt;em&gt;new things&lt;/em&gt; and I’m always on the lookout for the next big thing in technology; software or hardware.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-beginning&quot;&gt;The Beginning&lt;/h2&gt;
+&lt;p&gt;I’ll be writing about anything I think would be useful and will be sharing more about my development &lt;em&gt;stuff&lt;/em&gt; as time goes on. Until then, thanks for stopping by.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ 
+</feed>

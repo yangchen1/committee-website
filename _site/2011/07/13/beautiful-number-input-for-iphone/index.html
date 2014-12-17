@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-gb">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Beautiful Number Input for iPhone</title>
+	<meta name="author" content="Roger Chapman" />
+	<link href="http://feeds.feedburner.com/rogchap" rel="alternate" title="Roger Chapman" type="application/atom+xml" />
+	<link rel="stylesheet" href="/css/syntax.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/screen.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/tablet.css" type="text/css" media="screen and (min-width:651px) and (max-width: 1024px), screen and (min-device-width: 768px) and (max-device-width: 1024px)" />
+	<link rel="stylesheet" href="/css/mobile.css" type="text/css" media="handheld, screen and (max-width: 650px), screen and (max-device-width: 480px)" />
+</head>
+<body>
+	<div class="site">
+		<div class="title"><a href="/">Roger Chapman<br/>rogchap</a></div>
+		<div id="post">
+	<h1>Beautiful Number Input for iPhone</h1>
+	<p class="meta">13 Jul 2011</p>
+	<p>Most text/number input is done with a <code>UIFextField</code>, but the text in the field can not be styled very well (ie. no shadow). It also has a blinking cursor which sometimes you just don’t want.</p>
+
+<p>I wanted to enter a number using the number pad, have a nice drop shadow on the text, no blinking cursor and as an added bonus would show the currency symbol at the start of the number:</p>
+
+<p><img src="https://github.com/rogchap/SampleProjects/raw/master/NumberInput/Screenshot.png" alt="Sreenshot" /></p>
+
+<h2 id="hidden-uitextfield">Hidden UITextField</h2>
+
+<p>The trick here is to have a <code>UITextField</code> with a <code>UILabel</code> in front. The <code>UILabel</code> needs to have a background color so to hide the text and cursor being entered into the text field.</p>
+
+<p>Then all we need to do is hook up the <code>EditingChanged</code> event on the text field to then update our styled label:</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">textChanged:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+
+	<span class="kt">int</span> <span class="n">number</span> <span class="o">=</span> <span class="p">[</span><span class="n">_numberTextField</span><span class="p">.</span><span class="n">text</span> <span class="n">intValue</span><span class="p">];</span>
+
+	<span class="c1">// make sure we don&#39;t go beyond INT32_MAX</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">number</span> <span class="o">=</span> <span class="n">_currentNumber</span><span class="p">;</span>
+ 		<span class="n">_numberTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSString</span> <span class="nl">stringWithFormat</span><span class="p">:</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span> <span class="n">number</span><span class="p">];</span>
+	<span class="p">}</span>
+
+	<span class="n">_currentNumber</span> <span class="o">=</span> <span class="n">number</span><span class="p">;</span>
+	<span class="n">_numberLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSString</span> <span class="nl">stringWithFormat</span><span class="p">:</span><span class="s">@&quot;%@%d&quot;</span><span class="p">,</span> <span class="p">[[</span><span class="bp">NSLocale</span> <span class="n">currentLocale</span><span class="p">]</span> <span class="nl">objectForKey</span><span class="p">:</span><span class="n">NSLocaleCurrencySymbol</span><span class="p">],</span> <span class="n">_currentNumber</span><span class="p">];</span>
+<span class="p">}</span></code></pre></div>
+
+<h2 id="source-on-github">Source on GitHub</h2>
+
+<p>Once again I’ve added a source project on GitHub so you can try it out for yourself:</p>
+
+<p><a href="https://github.com/rogchap/SampleProjects/tree/master/NumberInput">https://github.com/rogchap/SampleProjects/tree/master/NumberInput</a></p>
+
+<h2 id="not-just-numbers">Not just Numbers</h2>
+
+<p>This technique will work on regular text too, and not just number. If you use this technique in any of your projects let me know as I would love to take a look at you implementation. :)</p>
+
+
+
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+    <g:plusone></g:plusone>
+
+</div>
+
+
+
+<div id="related">
+  <h2>Related Posts</h2>
+  <ul class="posts">
+    
+      <li><span>23 Aug 2013</span> <span class="seperator">~</span> <a href="/2013/08/23/custom-uiview-animations-with-vector-graphics/">Custom UIView Animations with Vector Graphics</a></li>
+    
+      <li><span>13 Aug 2013</span> <span class="seperator">~</span> <a href="/2013/08/13/simple-ios-dropdown-control-using-uitextfield/">Simple iOS Dropdown Control using UITextField</a></li>
+    
+      <li><span>07 Feb 2013</span> <span class="seperator">~</span> <a href="/2013/02/07/image-resize-middleware-for-expressjs/">Image Resize Middleware for Express.js</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="ads">
+    <script async src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Leaderboard -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-3092587044574000"
+         data-ad-slot="3996431372"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+<div class="comments">
+	<h3>Comments</h3>
+	<noscript>Please enable JavaScript to view the comments</noscript>
+	<div id="disqus_thread"></div>
+</div>
+<script type="text/javascript">
+    var disqus_shortname = 'rogchap'; 
+    var disqus_identifier = '/2011/07/13/beautiful-number-input-for-iphone';
+    var disqus_url = 'http://rogchap.com/2011/07/13/beautiful-number-input-for-iphone/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		<div class="footer">
+			<div class="contact">
+				<p>
+					Roger Chapman<br/>
+					Application Development Evangelist<br/>
+					&#114;&#111;&#103;&#99;&#104;&#97;&#112;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;
+				</p>
+			</div>
+			<div class="contact">
+				<p>
+					<a href="http://github.com/rogchap/">github.com/rogchap</a><br />
+					<a href="http://twitter.com/rogchap/">twitter.com/rogchap</a><br />
+					<a href="http://linkedin.com/in/rogchap/">linkedin.com/in/rogchap</a>
+				</p>
+			</div>
+		 	<div class="rss">
+				<a href="http://feeds.feedburner.com/rogchap">RSS Feed</a>
+			</div>
+		</div>
+	</div>
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+        _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+        _gaq.push(['_setAccount', 'UA-4155555-8']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</body>
+<html>

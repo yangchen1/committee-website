@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-gb">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Simple API Creation with Node.js</title>
+	<meta name="author" content="Roger Chapman" />
+	<link href="http://feeds.feedburner.com/rogchap" rel="alternate" title="Roger Chapman" type="application/atom+xml" />
+	<link rel="stylesheet" href="/css/syntax.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/screen.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/tablet.css" type="text/css" media="screen and (min-width:651px) and (max-width: 1024px), screen and (min-device-width: 768px) and (max-device-width: 1024px)" />
+	<link rel="stylesheet" href="/css/mobile.css" type="text/css" media="handheld, screen and (max-width: 650px), screen and (max-device-width: 480px)" />
+</head>
+<body>
+	<div class="site">
+		<div class="title"><a href="/">Roger Chapman<br/>rogchap</a></div>
+		<div id="post">
+	<h1>Simple API Creation with Node.js</h1>
+	<p class="meta">25 Jun 2011</p>
+	<p>This will be a tutorial for setting up a simple JSON API using <a href="http://modejs.org">Node.js</a>.</p>
+
+<p>Node.js is discribed as “evented I/O for V8 JavaScript” so is perfect for creating simple, lightweight APIs or websites.</p>
+
+<h2 id="step-1-install-nodejs">Step 1: Install Node.js</h2>
+
+<p>You can download Node.js from the GitHub repository and follow the <a href="https://github.com/joyent/node/wiki/Installation">installation guide</a>, but I’m quite a fan of using package managers so I’m going to install that way, but either way works. Package manager details can be found here: </p>
+
+<p><a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager</a>.</p>
+
+<p>Check your Node.js installation:</p>
+
+<pre><code>$ node -v
+v0.4.8
+</code></pre>
+
+<p>Now that we have Node.js installed we will want to install npm (Node Package Manager) which will make installing Node.js modules a breeze.</p>
+
+<pre><code>curl http://npmjs.org/install.sh | sh
+</code></pre>
+
+<p>Now we have Node.js installed and the Node Package Manager.</p>
+
+<h2 id="step-2-setup-api-application">Step 2: Setup API Application</h2>
+
+<p>Create the directory for application:</p>
+
+<pre><code>$ mkdir NodeApi
+$ cd NodeApi
+</code></pre>
+
+<p>Although we could create our API with Node.js alone I’m going to install <a href="http://expressjs.com/">express</a> which makes web development simple; well also make sure we have all the dependancies like Jade, a templeting engine:</p>
+
+<pre><code>$ npm install -g express
+$ npm install -d
+</code></pre>
+
+<p>Then lets create a default express project:</p>
+
+<pre><code>$ express
+</code></pre>
+
+<p>This will create the directories and files for a basic web application. Lets test our new web app:</p>
+
+<pre><code>$ node app.js
+Express server listening on port 3000 in development mode
+
+$ curl localhost:3000
+&lt;!DOCTYPE .... etc
+</code></pre>
+
+<p>Now we have a running web application! You can get more simple and lightweight that that….love it!</p>
+
+<h2 id="part-2-coming-soon">Part 2: Coming soon</h2>
+
+<p>I’m going to split this tutorial into a few parts. In the next part we will setup our application with a familier MVC style pattern.</p>
+
+<p>As always I’ll be putting the source project on GitHub:</p>
+
+<p><a href="https://github.com/rogchap/SampleProjects/tree/master/NodeApi">https://github.com/rogchap/SampleProjects/tree/master/NodeApi</a></p>
+
+
+
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+    <g:plusone></g:plusone>
+
+</div>
+
+
+
+<div id="related">
+  <h2>Related Posts</h2>
+  <ul class="posts">
+    
+      <li><span>23 Aug 2013</span> <span class="seperator">~</span> <a href="/2013/08/23/custom-uiview-animations-with-vector-graphics/">Custom UIView Animations with Vector Graphics</a></li>
+    
+      <li><span>13 Aug 2013</span> <span class="seperator">~</span> <a href="/2013/08/13/simple-ios-dropdown-control-using-uitextfield/">Simple iOS Dropdown Control using UITextField</a></li>
+    
+      <li><span>07 Feb 2013</span> <span class="seperator">~</span> <a href="/2013/02/07/image-resize-middleware-for-expressjs/">Image Resize Middleware for Express.js</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="ads">
+    <script async src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Leaderboard -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-3092587044574000"
+         data-ad-slot="3996431372"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+<div class="comments">
+	<h3>Comments</h3>
+	<noscript>Please enable JavaScript to view the comments</noscript>
+	<div id="disqus_thread"></div>
+</div>
+<script type="text/javascript">
+    var disqus_shortname = 'rogchap'; 
+    var disqus_identifier = '/2011/06/25/simple-api-creation-with-nodejs';
+    var disqus_url = 'http://rogchap.com/2011/06/25/simple-api-creation-with-nodejs/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+		<div class="footer">
+			<div class="contact">
+				<p>
+					Roger Chapman<br/>
+					Application Development Evangelist<br/>
+					&#114;&#111;&#103;&#99;&#104;&#97;&#112;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;
+				</p>
+			</div>
+			<div class="contact">
+				<p>
+					<a href="http://github.com/rogchap/">github.com/rogchap</a><br />
+					<a href="http://twitter.com/rogchap/">twitter.com/rogchap</a><br />
+					<a href="http://linkedin.com/in/rogchap/">linkedin.com/in/rogchap</a>
+				</p>
+			</div>
+		 	<div class="rss">
+				<a href="http://feeds.feedburner.com/rogchap">RSS Feed</a>
+			</div>
+		</div>
+	</div>
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+        _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+        _gaq.push(['_setAccount', 'UA-4155555-8']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</body>
+<html>
