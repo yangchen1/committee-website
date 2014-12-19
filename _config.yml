@@ -1,14 +1,14 @@
 url: https://thecommittee.me
 
 # Site settings
-title: Awesome Title
+title: The Commmittee
 email: your-email@domain.com
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+description: "The Committee is a 13-person, mixed-gender a cappella group from the University of Waterloo."
 
 # Color settings (hex-codes without the leading hash-tag)
 color:
-  primary: fed136
-  secondary: fec503  
+  primary: BFC1C2
+  secondary: BFC1C2  
   secondary-dark: 333
 
 # Team names, titles and social links
@@ -16,55 +16,67 @@ people:
 - name: Yang Chen
   pic: Yang
   position: Baritone
-  knownfor: #dammitYang
+  knownfor: Banging walls. "#dammitYang". A voice crack.
 
 - name: Ethan Brady
   pic: Ethan
   position: Bass
+  knownfor: Being "the face" of Valerie.
   
 - name: Sahaana Raveetharan
   pic: Sahaana
   position: Soprano
+  knownfor: "Meow."
   
 - name: Rishi Narale
   pic: Rishi
   position: Vocal Percussion / Bass
+  knownfor: Saying "I'm not the Mafia."
   
 - name: Lishni Salgado
   pic: Lishni
   position: Soprano
+  knownfor: Baking cookies/cake and being the (grand)mother.
   
 - name: Leeann Lu
   pic: Leeann
   position: Soprano / Alto
+  knownfor: Being the soprano, alto, beatboxer, rapper, and baritone of the group.
   
-- name: Trong
+- name: Trong Shen
   pic: Trong
   position: Tenor / Baritone
+  knownfor: Claiming he is more attractive than Khoa.
   
 - name: Manuel (Manny) Arab
   pic: Manny
   position: Tenor / Baritone / Vocal Percussion
+  knownfor: His side hip thrusts.
   
 - name: Kokulamenon (Koby) Pathmanathar
   pic: Koby
   position: Tenor
+  knownfor: Being MJ.
   
 - name: Khoa Tran
   pic: Khoa
   position: Tenor
+  knownfor: His eyerolls.
 
 - name: Elia Lam
   pic: Elia
   position: Alto
+  knownfor: Being surprising awake during performances.
   
-- name: Mickey dyke
+- name: Mickey Dyke
   pic: Mickey
   position: Alto
+  knownfor: Being super sassy to only Yang.
   
 - name: Kenique Toppin
   pic: Kenique
   position: Alto
+  knownfor: Writing "Don't Worry, Be Happy" on the board at every rehearsal.
 
 # Postal address (add as many lines as necessary)
 address:
