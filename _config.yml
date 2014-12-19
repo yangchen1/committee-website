@@ -13,51 +13,58 @@ color:
 
 # Team names, titles and social links
 people:
-- name: Kay Garland
-  pic: 1
-  position: Lead Designer
-  social:
-    - title: twitter
-      url: #
-    - title: facebook
-      url: #
-    - title: stack-overflow
-      url: #
+- name: Yang Chen
+  pic: Yang
+  position: Baritone
+  knownfor: #dammitYang
 
-- name: Larry Parker
-  pic: 2
-  position: Lead Marketer
-  social:
-    - title: twitter
-      url: #
-    - title: facebook
-      url: #
-    - title: linkedin
-      url: #
+- name: Ethan Brady
+  pic: Ethan
+  position: Bass
+  
+- name: Sahaana Raveetharan
+  pic: Sahaana
+  position: Soprano
+  
+- name: Rishi Narale
+  pic: Rishi
+  position: Vocal Percussion / Bass
+  
+- name: Lishni Salgado
+  pic: Lishni
+  position: Soprano
+  
+- name: Leeann Lu
+  pic: Leeann
+  position: Soprano / Alto
+  
+- name: Trong
+  pic: Trong
+  position: Tenor / Baritone
+  
+- name: Manuel (Manny) Arab
+  pic: Manny
+  position: Tenor / Baritone / Vocal Percussion
+  
+- name: Kokulamenon (Koby) Pathmanathar
+  pic: Koby
+  position: Tenor
+  
+- name: Khoa Tran
+  pic: Khoa
+  position: Tenor
 
-- name: Diana Petersen
-  pic: 3
-  position: Lead Developer
-  social:
-    - title: twitter
-      url: #
-    - title: facebook
-      url: #
-    - title: google-plus
-      url: #
-
-# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
-social:
-  - title: twitter
-    url: http://twitter.com/jekyllrb
-  - title: facebook
-    url:
-  - title: stack-overflow
-    url: http://stackoverflow.com/questions/tagged/jekyll
-  - title: bitbucket 
-    url: http://bitbucket.org/jekyll
-  - title: github
-    url: http://github.com/jekyll
+- name: Elia Lam
+  pic: Elia
+  position: Alto
+  
+- name: Mickey dyke
+  pic: Mickey
+  position: Alto
+  
+- name: Kenique Toppin
+  pic: Kenique
+  position: Alto
 
 # Postal address (add as many lines as necessary)
 address:

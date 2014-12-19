@@ -17,6 +17,11 @@ body {
     color: #333;
 }
 
+@font-face {
+    font-family: EchoDeco;
+    src: url('css/EchoDeco.ttf');
+}
+
 .text-muted {
     color: #777;
 }
@@ -280,6 +285,7 @@ header {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+    height: 100vh;
 }
 
 header .intro-text {
@@ -289,9 +295,9 @@ header .intro-text {
 
 header .intro-text .intro-lead-in {
     margin-bottom: 25px;
-    font-family: "Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 22px;
-    font-style: italic;
+/*    font-family: "Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    font-family: EchoDeco, sans-serif;
+    font-size: 75px;
     line-height: 22px;
 }
 
@@ -312,9 +318,9 @@ header .intro-text .intro-heading {
 
     header .intro-text .intro-lead-in {
         margin-bottom: 25px;
-        font-family: "Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;
-        font-size: 40px;
-        font-style: italic;
+/*        font-family: "Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+        font-family: EchoDeco, sans-serif;
+        font-size: 75px;
         line-height: 40px;
     }
 
@@ -868,4 +874,37 @@ img::-moz-selection {
 
 body {
     webkit-tap-highlight-color: #fed136;
+}
+.profilepic {
+    width: 130px;
+    height: 130px;
+}
+
+@media (min-width: 1200px)
+.container-members {
+width: 1050px;
+}
+
+@media (min-width: 992px)
+.container-members {
+width: 970px;
+}
+
+@media (min-width: 768px)
+.container-members {
+width: 750px;
+}
+
+
+@media (min-width: 1200px)
+.container-members {
+width: 1170px;
+}
+@media (min-width: 992px)
+.container-members {
+width: 970px;
+}
+@media (min-width: 768px)
+.container-members {
+width: 750px;
 }

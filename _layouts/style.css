@@ -1,2 +1,35 @@
 {% include css/bootstrap.min.css %}
 {% include css/agency.css %}
+.profilepic {
+    width: 130px;
+    height: 130px;
+}
+
+@media (min-width: 1200px)
+.container-members {
+width: 1050px;
+}
+
+@media (min-width: 992px)
+.container-members {
+width: 970px;
+}
+
+@media (min-width: 768px)
+.container-members {
+width: 750px;
+}
+
+
+@media (min-width: 1200px)
+.container-members {
+width: 1170px;
+}
+@media (min-width: 992px)
+.container-members {
+width: 970px;
+}
+@media (min-width: 768px)
+.container-members {
+width: 750px;
+}
