@@ -2,7 +2,7 @@ url: https://thecommittee.me
 
 # Site settings
 title: The Commmittee
-email: your-email@domain.com
+email: thecommitteeacappella@gmail.com
 description: "The Committee is a 13-person, mixed-gender a cappella group from the University of Waterloo."
 
 # Color settings (hex-codes without the leading hash-tag)
@@ -16,7 +16,7 @@ people:
 - name: Yang Chen
   pic: Yang
   position: Baritone
-  knownfor: Banging walls. "#dammitYang". A voice crack.
+  knownfor: "Causing people to say #dammitYang."
 
 - name: Ethan Brady
   pic: Ethan
@@ -36,7 +36,7 @@ people:
 - name: Lishni Salgado
   pic: Lishni
   position: Soprano
-  knownfor: Baking cookies/cake and being the (grand)mother.
+  knownfor: Baking cookies/cakes as the (grand)mother.
   
 - name: Leeann Lu
   pic: Leeann
@@ -77,11 +77,6 @@ people:
   pic: Kenique
   position: Alto
   knownfor: Writing "Don't Worry, Be Happy" on the board at every rehearsal.
-
-# Postal address (add as many lines as necessary)
-address:
-  - line: 3481 Melrose Place
-  - line: Beverly Hills, CA 90210
 
 # Build settings
 markdown: kramdown
